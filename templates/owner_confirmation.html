@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owner Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            color: #4a5568;
+        }
+        p {
+            font-size: 16px;
+            color: #2d3748;
+        }
+        a {
+            text-decoration: none;
+            color: #5a67d8;
+            margin-top: 20px;
+            display: inline-block;
+        }
+        a:hover {
+            color: #434190;
+        }
+    </style>
+</head>
+<body>
+    <h1>Product Confirmation</h1>
+    <p>Product Name: {{ product_name }}</p>
+    <p>Base Price: ${{ base_price }}</p>
+    <p>Minimum Price: ${{ min_price }}</p>
+    <a href="/owner">Go Back to Owner Page</a>
+</body>
+</html>

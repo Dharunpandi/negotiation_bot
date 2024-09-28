@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Negotiation Chatbot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: #e2e8f0;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        #chat-container {
+            max-width: 600px;
+            margin: auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #4a5568;
+        }
+
+        #chat-messages {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f7fafc;
+        }
+
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 80%;
+        }
+
+        .message strong {
+            color: #5a67d8;
+        }
+
+        .message.user {
+            background-color: #c6f6d5;
+            margin-left: auto; /* Align user messages to the right */
+            text-align: right;
+        }
+
+        .message.bot {
+            background-color: #e2e8f0;
+            margin-right: auto; /* Align bot messages to the left */
+            text-align: left;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 100px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #5a67d8;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #434190;
+        }
+
+        .card {
+            border: 1px solid #5a67d8;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 20px;
+            display: none; /* Hidden by default */
+            background-color: #e6fffa;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h4 {
+            margin: 0;
+            color: #5a67d8;
+        }
+
+        .card p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <h2>Negotiation Chatbot</h2>
+        <div id="chat-messages"></div>
+        <div style="display: flex; align-items: center;">
+            <input type="text" id="user-input" placeholder="Type your message..." />
+            <button id="send-message">Send</button>
+        </div>
+        <button id="confirm-deal" style="display: none;">Confirm Deal</button>
+        <div id="result-card" class="card">
+            <h4>Final Deal</h4>
+            <p id="final-price"></p>
+            <p id="discount"></p>
+        </div>
+    </div>
+
+    <script>
+        const sendMessageButton = document.getElementById('send-message');
+        const confirmDealButton = document.getElementById('confirm-deal');
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+        const resultCard = document.getElementById('result-card');
+        const finalPriceElement = document.getElementById('final-price');
+        const discountElement = document.getElementById('discount');
+
+        sendMessageButton.addEventListener('click', async () => {
+            const message = userInput.value;
+            if (message.trim() === "") return; // Prevent empty messages
+            chatMessages.innerHTML += `<div class="message user"><strong>You:</strong> ${message}</div>`;
+            userInput.value = '';
+
+            const response = await fetch('/negotiate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ user_message: message }),
+            });
+
+            const data = await response.json();
+            if (data.bot_response) {
+                chatMessages.innerHTML += `<div class="message bot"><strong>Bot:</strong> ${data.bot_response}</div>`;
+                if (data.current_price) {
+                    confirmDealButton.style.display = 'inline';
+                }
+                chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to the bottom
+            }
+        });
+
+        confirmDealButton.addEventListener('click', async () => {
+            const response = await fetch('/confirm_deal', {
+                method: 'POST',
+            });
+
+            const data = await response.json();
+            if (data.final_price) {
+                finalPriceElement.textContent = `Final Negotiated Price: $${data.final_price.toFixed(2)}`;
+                discountElement.textContent = `Discount: ${data.discount}%`;
+                resultCard.style.display = 'block'; // Show the card with results
+            }
+        });
+    </script>
+</body>
+</html>

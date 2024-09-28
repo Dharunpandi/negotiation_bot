@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owner Mode</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #e2e8f0;
+            margin: 0;
+            padding: 20px;
+        }
+        h2 {
+            color: #4a5568;
+            text-align: center;
+        }
+        .form-control {
+            border-radius: 5px;
+        }
+        .btn-primary {
+            background-color: #5a67d8;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #434190;
+        }
+    </style>
+</head>
+<body>
+    <h2>Owner Mode</h2>
+    <form action="/owner_confirmation" method="POST">
+        <div class="form-group">
+            <label for="product_name">Product Name:</label>
+            <input type="text" class="form-control" id="product_name" name="product_name" required>
+        </div>
+        <div class="form-group">
+            <label for="base_price">Base Price:</label>
+            <input type="number" class="form-control" id="base_price" name="base_price" required>
+        </div>
+        <div class="form-group">
+            <label for="min_price">Minimum Price:</label>
+            <input type="number" class="form-control" id="min_price" name="min_price" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Confirm Product</button>
+    </form>
+    <a href="/">Back to Home</a>
+</body>
+</html>
